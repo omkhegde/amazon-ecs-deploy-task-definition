@@ -41,7 +41,10 @@ jobs:
               return text
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
+                .replace(/[@]/g, '\\@')
+                .replace(/>/g, '&gt;')
+                .replace(/&amp;lt;/g, '&lt;')
+                .replace(/&amp;gt;/g, '&gt;');
             };
 
             const sanitizedTitle = escapeForSlack(sanitizeTitle(item.title));
