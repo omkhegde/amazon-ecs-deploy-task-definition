@@ -18,7 +18,8 @@ jobs:
         with:
           script: |
             const isPR = !!context.payload.pull_request;
-            const item = isPR ? context.payload.pull_request : context.payload.issue;
+            const isIssue = !!context.payload.issue;
+            const item = isPR ? context.payload.pull_request : isIssue ? context.payload.issue : context.payload.issue_comment.issue;
             
             // Sanitization functions
             const sanitizeTitle = (title) => {
@@ -68,7 +69,7 @@ jobs:
               "Notification Type": "Issue",
               "Notification URL":"${{ github.event.issue.html_url }}",
               "GitHub Repo": "${{ github.repository }}",
-              "Notification Title": "${{ github.event.issue.title }}"
+              "Notification Title": "${{ steps.sanitize-title.outputs.safe-title }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -82,7 +83,7 @@ jobs:
               "Notification Type": "Issue comment",
               "Notification URL":"${{ github.event.comment.html_url }}",
               "GitHub Repo": "${{ github.repository }}",
-              "Notification Title": "${{ github.event.issue_comment.issue.title }}"
+              "Notification Title": "${{ steps.sanitize-title.outputs.safe-title }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
