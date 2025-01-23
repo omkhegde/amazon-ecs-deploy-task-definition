@@ -21,9 +21,9 @@ jobs:
             const item = isPR ? context.payload.pull_request : context.payload.issue;
             
             // Sanitization functions
-            const sanitizePayload = (item) => {
-              console.log(item);
-              return item
+            const sanitizeTitle = (title) => {
+              console.log(title);
+              return title
                 // Remove potential markdown formatting
                 .replace(/[*_~`]/g, '')
                 // Remove potential HTML tags
@@ -42,8 +42,8 @@ jobs:
                 .replace(/>/g, '&gt;');
             };
 
-            const sanitizedPayload = escapeForSlack(sanitizePayload(item));
-            core.setOutput('safe-payload', sanitizedPayload);
+            const sanitizedTitle = escapeForSlack(sanitizeTitle(item.title));
+            core.setOutput('safe-title', sanitizedTitle);
       - name: Send notifications on Pull Request
         if: ${{ github.event_name == 'pull_request'}}
         id: slack_PR
@@ -54,7 +54,7 @@ jobs:
               "Notification Type": "Pull Request",
               "Notification URL":"${{ github.event.pull_request.html_url }}",
               "GitHub Repo": "${{ github.repository }}",
-              "Notification Title": "${{ steps.sanitize-title.outputs.safe-payload }}"
+              "Notification Title": "${{ steps.sanitize-title.outputs.safe-title }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
