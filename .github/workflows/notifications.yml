@@ -23,7 +23,6 @@ jobs:
             
             // Sanitization functions
             const sanitizeTitle = (title) => {
-              console.log(title);
               return title
                 // Remove potential markdown formatting
                 .replace(/[*_~`]/g, '')
@@ -46,6 +45,7 @@ jobs:
             };
 
             const sanitizedTitle = escapeForSlack(sanitizeTitle(item.title));
+            console.log('Sanitized Title: ', sanitizedTitle);
             core.setOutput('safe-title', sanitizedTitle);
       - name: Send notifications on Pull Request
         if: ${{ github.event_name == 'pull_request'}}
