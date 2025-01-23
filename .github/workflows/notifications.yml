@@ -40,7 +40,8 @@ jobs:
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
             };
-            
+
+            console.log('Event payload:', JSON.stringify(context.payload, null, 2));
             const sanitizedPayload = escapeForSlack(sanitizePayload(item));
             core.setOutput('safe-payload', sanitizedPayload);
       - name: Send notifications on Pull Request
