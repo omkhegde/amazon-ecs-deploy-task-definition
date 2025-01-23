@@ -17,10 +17,10 @@ jobs:
         id: sanitize-title
         with:
           script: |
-            const rawTitle = context.payload.issue.title;
+            const payload = github.event;
             
             // Sanitization functions
-            const sanitizeTitle = (title) => {
+            const sanitizePayload = (payload) => {
               return title
                 // Remove potential markdown formatting
                 .replace(/[*_~`]/g, '')
@@ -42,8 +42,8 @@ jobs:
                 .replace(/>/g, '&gt;');
             };
             
-            const sanitizedTitle = escapeForSlack(sanitizeTitle(rawTitle));
-            core.setOutput('safe-title', sanitizedTitle);
+            const sanitizedPayload = escapeForSlack(sanitizePayload(payload));
+            core.setOutput('safe-payload', sanitizedPayload);
       - name: Send notifications on Pull Request
         if: ${{ github.event_name == 'pull_request'}}
         id: slack_PR
@@ -54,7 +54,7 @@ jobs:
               "Notification Type": "Pull Request",
               "Notification URL":"${{ github.event.pull_request.html_url }}",
               "GitHub Repo": "${{ github.repository }}",
-              "Notification Title": "${{ steps.sanitize-title.outputs.safe-title }}"
+              "Notification Title": "${{ steps.sanitize-title.outputs.safe-payload }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
