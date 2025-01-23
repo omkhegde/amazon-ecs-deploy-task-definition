@@ -17,11 +17,12 @@ jobs:
         id: sanitize-title
         with:
           script: |
-            const payload = github.event.pull_request.title;
+            const isPR = !!context.payload.pull_request;
+            const item = isPR ? context.payload.pull_request : context.payload.issue;
             
             // Sanitization functions
-            const sanitizePayload = (payload) => {
-              return payload
+            const sanitizePayload = (item) => {
+              return item
                 // Remove potential markdown formatting
                 .replace(/[*_~`]/g, '')
                 // Remove potential HTML tags
@@ -40,7 +41,7 @@ jobs:
                 .replace(/>/g, '&gt;');
             };
             
-            const sanitizedPayload = escapeForSlack(sanitizePayload(payload));
+            const sanitizedPayload = escapeForSlack(sanitizePayload(item));
             core.setOutput('safe-payload', sanitizedPayload);
       - name: Send notifications on Pull Request
         if: ${{ github.event_name == 'pull_request'}}
