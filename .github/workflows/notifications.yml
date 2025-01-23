@@ -17,7 +17,7 @@ jobs:
         id: sanitize-title
         with:
           script: |
-            const payload = github.event;
+            const payload = github.event.pull_request.title;
             
             // Sanitization functions
             const sanitizePayload = (payload) => {
