@@ -33,6 +33,8 @@ jobs:
                 .replace(/\s+/g, ' ')
                 // Trim whitespace
                 .trim()
+                // Enforce max length of 100
+                .substring(0, 100);
             };
             
             // Escape special characters for Slack
