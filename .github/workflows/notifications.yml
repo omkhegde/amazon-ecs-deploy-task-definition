@@ -21,7 +21,7 @@ jobs:
             
             // Sanitization functions
             const sanitizePayload = (payload) => {
-              return title
+              return payload
                 // Remove potential markdown formatting
                 .replace(/[*_~`]/g, '')
                 // Remove potential HTML tags
@@ -30,8 +30,6 @@ jobs:
                 .replace(/\s+/g, ' ')
                 // Trim whitespace
                 .trim()
-                // Limit length
-                .substring(0, 100);
             };
             
             // Escape special characters for Slack
